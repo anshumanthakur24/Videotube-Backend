@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-const app= express();  // max data comes from req.params or req.body
+const app= express();  // maximum data comes from req.params or req.body
 app.use(cors({                      //Allows cross-origin requests from the specified origin, enabling cookies and credentials.
       origin: process.env.CORS_ORIGIN,
       credentials: true
