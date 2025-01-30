@@ -1,7 +1,7 @@
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiError } from "../utils/ApiError";
-import {jwt} from "jsonwebtoken";
-import {User} from "../models/User";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
+import jwt from "jsonwebtoken";
+import {User} from "../models/user.model.js";
 
 export const veriyfJWT= asyncHandler(async(req,res,next)=>{
     try {
@@ -13,16 +13,16 @@ export const veriyfJWT= asyncHandler(async(req,res,next)=>{
     
         const decodeToken= jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     
-        await User.findById(decodeToken?._id).select("-password -refreshToken");
+        const user =await User.findById(decodeToken?._id).select("-password -refreshToken");
         
         if(!user){
             //TODO discuss about frontend
             throw new ApiError(401,"Unauthorized");
         }
     
-        req.user=user;
+        req.user= user;
         next();
     } catch (error) {
-        throw new ApiError(401,error?.message|| "Invalid access token");
+        throw new ApiError(401, error?.message || "Invalid access token");
     }
 });
