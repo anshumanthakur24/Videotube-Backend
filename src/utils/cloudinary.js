@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
+import { error } from "console";
 //node js fs , standard node library for file handling
 import fs from "fs";
 cloudinary.config({ 
@@ -18,11 +19,21 @@ const uploadOnCloudinary= async (localFilePath) =>{
         })
         //file has been uploaded on cloudinary
         //console.log("File uploaded successfully",response.url);
-        return response;
         fs.unlinkSync(localFilePath) //remove the locally saved file as the upload was successful
+
+        return response;
     } catch (error) {
         fs.unlinkSync(localFilePath) //remove the locally saved file as the upload failed
     }
 }
 
-export {uploadOnCloudinary};
+const deleteOldImage=async (oldImageUrl)=>{
+    const response= await cloudinary.uploader.destroy(oldImageUrl);
+    if(error){
+        console.error("Error deleting old file", error);
+    } else{
+        console.log("Old File deleted successfully", response);
+    }
+}
+
+export {uploadOnCloudinary,deleteOldImage};
